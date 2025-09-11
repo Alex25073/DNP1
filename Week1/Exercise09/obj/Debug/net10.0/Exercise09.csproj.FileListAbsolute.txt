@@ -1,0 +1,14 @@
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\bin\Debug\net10.0\Exercise09.exe
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\bin\Debug\net10.0\Exercise09.deps.json
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\bin\Debug\net10.0\Exercise09.runtimeconfig.json
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\bin\Debug\net10.0\Exercise09.dll
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\bin\Debug\net10.0\Exercise09.pdb
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\Exercise09.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\Exercise09.AssemblyInfoInputs.cache
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\Exercise09.AssemblyInfo.cs
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\Exercise09.csproj.CoreCompileInputs.cache
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\Exercise09.dll
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\refint\Exercise09.dll
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\Exercise09.pdb
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\Exercise09.genruntimeconfig.cache
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise09\obj\Debug\net10.0\ref\Exercise09.dll
