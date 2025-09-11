@@ -1,0 +1,15 @@
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\bin\Debug\net10.0\Exercise11.exe
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\bin\Debug\net10.0\Exercise11.deps.json
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\bin\Debug\net10.0\Exercise11.runtimeconfig.json
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\bin\Debug\net10.0\Exercise11.dll
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\bin\Debug\net10.0\Exercise11.pdb
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\Exercise11.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\Exercise11.AssemblyInfoInputs.cache
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\Exercise11.AssemblyInfo.cs
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\Exercise11.csproj.CoreCompileInputs.cache
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\Exercise11.sourcelink.json
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\Exercise11.dll
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\refint\Exercise11.dll
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\Exercise11.pdb
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\Exercise11.genruntimeconfig.cache
+C:\Users\veryc\Desktop\Univer\DNP1\Week1\Exercise11\obj\Debug\net10.0\ref\Exercise11.dll
