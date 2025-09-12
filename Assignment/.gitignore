@@ -1,0 +1,28 @@
+# Ignore build output folders
+bin/
+obj/
+
+# User/IDE settings
+*.user
+*.suo
+.vs/
+.vscode/
+
+# Build results
+*.dll
+*.exe
+*.pdb
+
+# NuGet packages
+*.nupkg
+project.lock.json
+project.nuget.cache
+
+# Auto-generated files
+*.log
+
+# Mac/Linux system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
