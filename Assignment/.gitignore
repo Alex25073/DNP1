@@ -1,28 +1,68 @@
-# Ignore build output folders
-bin/
-obj/
-
-# User/IDE settings
-*.user
-*.suo
-.vs/
-.vscode/
+## C# / .NET / Visual Studio / Rider .gitignore
 
 # Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Rider / IntelliJ
+.idea/
+*.iml
+
+# Visual Studio cache/options
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code settings
+.vscode/
+*.code-workspace
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+artifacts/
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Entity Framework
+[Mm]igrations/
+
+# Build artifacts
 *.dll
 *.exe
+*.app
+*.apk
+*.aab
+*.so
+*.dylib
 *.pdb
-
-# NuGet packages
-*.nupkg
-project.lock.json
-project.nuget.cache
-
-# Auto-generated files
+*.cache
+*.dbmdl
+*.bak
 *.log
+*.zip
+*.tgz
 
-# Mac/Linux system files
-.DS_Store
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
 
-# Windows system files
+# Coverage
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Other system files
+*.tmp
+*.swp
+*.DS_Store
 Thumbs.db
