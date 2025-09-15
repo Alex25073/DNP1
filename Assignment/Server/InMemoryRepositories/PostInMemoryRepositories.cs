@@ -7,10 +7,10 @@ public class PostInMemoryRepositories : IPostRepository
 {
     private readonly List<Post> _posts = new();
 
-    public Task AddAsync(Post post)
+    public Task<Post> AddAsync(Post post)
     {
         _posts.Add(post);
-        return Task.CompletedTask;
+        return Task.FromResult(post);
     }
 
     public Task DeleteAsync(Post post)
@@ -23,6 +23,19 @@ public class PostInMemoryRepositories : IPostRepository
     {
         var post = _posts.FirstOrDefault(p => p.Id == id);
         return Task.FromResult(post);
+    }
+
+    public Task<Post> GetSingleAsync(int id)
+    {
+        var post = _posts.FirstOrDefault(p => p.Id == id);
+        if (post == null)
+            throw new InvalidOperationException($"Post with Id {id} not found.");
+        return Task.FromResult(post);
+    }
+
+    public IQueryable<Post> GetManyAsync()
+    {
+        return _posts.AsQueryable();
     }
 
     public Task<List<Post>> ListAllAsync()

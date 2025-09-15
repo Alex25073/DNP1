@@ -3,43 +3,45 @@ using RepositoryContracts;
 
 namespace InMemoryRepositories;
 
-public class CommentInMemoryRepositories : IPostRepository
+public class CommentInMemoryRepositories : ICommentRepository
 {
-    private readonly List<Post> _posts = new();
+    private readonly List<Comment> _comments = new();
     private int _nextId = 1;
 
-    public Task AddAsync(Post post)
+    public Task<Comment> AddAsync(Comment comment)
     {
-        _posts.Add(post);
-        return Task.CompletedTask;
+        comment.Id = _nextId++;
+        _comments.Add(comment);
+        return Task.FromResult(comment);
     }
 
-
-    public Task DeleteAsync(Post post)
+    public Task UpdateAsync(Comment comment)
     {
-        _posts.Remove(post);
-        return Task.CompletedTask;
-    }
-
-    public Task<Post?> GetByIdAsync(int id)
-    {
-        var post = _posts.FirstOrDefault(p => p.Id == id);
-        return Task.FromResult(post);
-    }
-
-    public Task<List<Post>> ListAllAsync()
-    {
-        return Task.FromResult(_posts.ToList());
-    }
-
-    public Task UpdateAsync(Post post)
-    {
-        var existingPost = _posts.FirstOrDefault(p => p.Id == post.Id);
-        if (existingPost != null)
+        var existingComment = _comments.FirstOrDefault(c => c.Id == comment.Id);
+        if (existingComment != null)
         {
-            _posts.Remove(existingPost);
-            _posts.Add(post);
+            _comments.Remove(existingComment);
+            _comments.Add(comment);
         }
         return Task.CompletedTask;
+    }
+
+    public Task DeleteAsync(Comment comment)
+    {
+        _comments.RemoveAll(c => c.Id == comment.Id);
+        return Task.CompletedTask;
+    }
+
+    public Task<Comment> GetSingleAsync(int id)
+    {
+        var comment = _comments.FirstOrDefault(c => c.Id == id);
+        if (comment == null)
+            throw new InvalidOperationException($"Comment with Id {id} not found.");
+        return Task.FromResult(comment);
+    }
+
+    public IQueryable<Comment> GetManyAsync()
+    {
+        return _comments.AsQueryable();
     }
 }

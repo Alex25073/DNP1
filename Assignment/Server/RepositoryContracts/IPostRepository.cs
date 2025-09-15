@@ -2,11 +2,11 @@ using Entities;
 
 namespace RepositoryContracts;
 
-public interface IUserRepository
+public interface IPostRepository
 {
-    Task<User> AddAsync(User user);
-    Task UpdateAsync(User user);
-    Task DeleteAsync(int id);
-    Task<User> GetSingleAsync(int id);
-    IQueryable<User> GetManyAsync();
+    Task<Post> AddAsync(Post post);
+    Task UpdateAsync(Post post);
+    Task DeleteAsync(Post post);
+    Task<Post> GetSingleAsync(int id);
+    IQueryable<Post> GetManyAsync();
 }
