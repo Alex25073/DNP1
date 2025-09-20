@@ -16,6 +16,6 @@ public sealed class ListUsersView
         var list = _users.GetManyAsync().OrderBy(u => u.Id).ToList();
         if (list.Count == 0) { Console.WriteLine("(no users)"); return; }
 
-        foreach (var u in list) Console.WriteLine($" { u.Username}");
+        foreach (var u in list) Console.WriteLine($" [{u.Id}]{u.Username}");
     }
 }

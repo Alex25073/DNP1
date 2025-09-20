@@ -19,17 +19,19 @@ public sealed class CreatePostView
 
     public async Task ShowAsync()
     {
-        var userId = Input.ReadInt("UserId: ");
+        string userName = Input.ReadRequired("Username: ");
+        var userId = _users.GetManyAsync().FirstOrDefault(u => u.Username == userName)?.Id ?? -1;
         if (!_users.GetManyAsync().Any(u => u.Id == userId))
         {
-            System.Console.WriteLine($"No user with Id {userId}.");
+            System.Console.WriteLine($"No user with Username {userName}.");
             return;
         }
 
         var title = Input.ReadRequired("Title: ");
         var body  = Input.ReadRequired("Body: ");
 
-        var created = await _posts.AddAsync(new Post { UserId = userId, Title = title, Body = body });
-        System.Console.WriteLine($"Post created with Id={created.Id}");
+        var postNr= _posts.GetManyAsync().Count();
+        var created = await _posts.AddAsync(new Post { UserId = userId, Title = title, Body = body, Username = userName, Id = postNr + 1 });
+        System.Console.WriteLine($"Post created with Title={created.Title}");
     }
 }

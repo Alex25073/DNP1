@@ -21,23 +21,25 @@ public sealed class CreateCommentView
 
     public async Task ShowAsync()
     {
-        var userId = Input.ReadInt("UserId: ");
+        string userName = Input.ReadRequired("Username: ");
+        var userId = _users.GetManyAsync().FirstOrDefault(u => u.Username == userName)?.Id ?? -1;
         if (!_users.GetManyAsync().Any(u => u.Id == userId))
         {
-            System.Console.WriteLine($"No user with Id {userId}.");
+            System.Console.WriteLine($"No user with Username {userName}.");
             return;
         }
 
-        var postId = Input.ReadInt("PostId: ");
+        string postTitle = Input.ReadRequired("PostTitle: ");
+        var postId = _posts.GetManyAsync().FirstOrDefault(p => p.Title == postTitle)?.Id ?? -1;
         if (!_posts.GetManyAsync().Any(p => p.Id == postId))
         {
-            System.Console.WriteLine($"No post with Id {postId}.");
+            System.Console.WriteLine($"No post with Title {postTitle}.");
             return;
         }
 
         var body = Input.ReadRequired("Body: ");
 
-        var created = await _comments.AddAsync(new Comment { UserId = userId, PostId = postId, Body = body });
+        var created = await _comments.AddAsync(new Comment { UserId = userId, PostId = postId, Body = body, Username = userName });
         System.Console.WriteLine($"Comment created with Id={created.Id}");
     }
 }

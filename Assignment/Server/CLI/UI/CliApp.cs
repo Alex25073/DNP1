@@ -26,7 +26,7 @@ public class CliApp
         Console.WriteLine("======================================");
 
         var usersView = new ManageUsersView(_users);
-        var postsView = new ManagePostsView(_posts, _users);
+        var postsView = new ManagePostsView(_posts, _users, _comments);
         var commentsView = new ManageCommentsView(_comments, _users, _posts);
 
         while (true)

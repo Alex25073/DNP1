@@ -8,11 +8,13 @@ public sealed class ManagePostsView
 {
     private readonly IPostRepository _posts;
     private readonly IUserRepository _users;
+    private readonly ICommentRepository _comments;
 
-    public ManagePostsView(IPostRepository posts, IUserRepository users)
+    public ManagePostsView(IPostRepository posts, IUserRepository users, ICommentRepository comments)
     {
         _posts = posts;
         _users = users;
+        _comments = comments;
     }
 
     public async Task ShowAsync()
@@ -32,7 +34,7 @@ public sealed class ManagePostsView
             {
                 case "1": await new CreatePostView(_posts, _users).ShowAsync(); break;
                 case "2": new ListPostsView(_posts).Show(); break;
-                case "3": await new SinglePostView(_posts).ShowAsync(); break;
+                case "3": await new SinglePostView(_posts,_comments).ShowAsync(); break;
                 case "b": return;
                 default: Console.WriteLine("Unknown command."); break;
             }

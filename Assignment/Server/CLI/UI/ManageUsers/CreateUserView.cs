@@ -28,7 +28,8 @@ public sealed class CreateUserView
             return;
         }
 
-        var created = await _users.AddAsync(new User { Username = username, Password = password });
+        var nrOfUsers = _users.GetManyAsync().Count();
+        var created = await _users.AddAsync(new User { Username = username, Password = password , Id = nrOfUsers + 1});
         Console.WriteLine($"User created with Id={created.Id}");
     }
 }
