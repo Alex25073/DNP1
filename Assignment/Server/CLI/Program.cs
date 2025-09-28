@@ -1,7 +1,7 @@
 ﻿
 using RepositoryContracts;
 using CLI.UI;
-using InMemoryRepositories;
+using FileRepositories;
 
 namespace CLI;
 
@@ -9,9 +9,9 @@ internal static class Program
 {
     private static async Task Main()
     {
-        IUserRepository userRepo = new UserInMemoryRepositories();
-        IPostRepository postRepo = new PostInMemoryRepositories();
-        ICommentRepository commentRepo = new CommentInMemoryRepositories();
+        IUserRepository userRepo = new UserFileRepository();
+        IPostRepository postRepo = new PostFileRepository();
+        ICommentRepository commentRepo = new CommentFileRepository();
 
         UI.CliApp app = new UI.CliApp(userRepo, postRepo, commentRepo);
         await app.StartAsync();
