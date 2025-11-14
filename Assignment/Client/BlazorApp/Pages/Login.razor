@@ -1,0 +1,45 @@
+﻿@page "/login"
+@inject IAuthService AuthService
+@inject NavigationManager Nav
+
+<h3>Login</h3>
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <p style="color:red">@_error</p>
+}
+
+<EditForm Model="_model" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-2">
+        <label>User name:</label><br />
+        <InputText @bind-Value="_model.Username" />
+    </div>
+
+    <div class="mb-2">
+        <label>Password:</label><br />
+        <InputText @bind-Value="_model.Password" type="password" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+@code {
+    private LoginRequest _model = new();
+    private string? _error;
+
+    private async Task HandleLogin()
+    {
+        _error = null;
+        var user = await AuthService.LoginAsync(_model);
+        if (user is null)
+        {
+            _error = "Invalid username or password.";
+            return;
+        }
+
+        Nav.NavigateTo("/");
+    }
+}

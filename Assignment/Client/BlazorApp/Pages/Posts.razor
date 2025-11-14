@@ -1,0 +1,108 @@
+﻿@page "/"
+@page "/posts"
+@inject IPostsService PostsService
+@inject IUsersService UsersService
+@inject NavigationManager Nav
+
+<h3>Posts</h3>
+
+<AuthorizeView>
+    <Authorized>
+        <h4>Create post</h4>
+
+        <EditForm Model="_newPost" OnValidSubmit="CreatePostAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-2">
+                <label>Title:</label><br />
+                <InputText @bind-Value="_newPost.Title" />
+            </div>
+
+            <div class="mb-2">
+                <label>Body:</label><br />
+                <InputTextArea @bind-Value="_newPost.Body" />
+            </div>
+
+            <div class="mb-2">
+                <label>Author (user):</label><br />
+                <select @bind="_newPost.UserId">
+                    <option value="">-- select user --</option>
+                    @foreach (var u in _users)
+                    {
+                        <option value="@u.Id">@u.UserName</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" disabled="_users.Count == 0">
+                Create
+            </button>
+        </EditForm>
+
+        <hr />
+    </Authorized>
+    <NotAuthorized>
+        <p>Log in to create posts.</p>
+        <hr />
+    </NotAuthorized>
+</AuthorizeView>
+
+<h4>All posts</h4>
+
+<input placeholder="Filter by title..."
+       @bind="_filterTitle"
+       @bind:event="oninput" />
+<button @onclick="LoadPostsAsync" class="btn btn-secondary btn-sm ms-1">Search</button>
+
+@if (_posts is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!_posts.Any())
+{
+    <p>No posts found.</p>
+}
+else
+{
+    <ul>
+        @foreach (var p in _posts)
+        {
+            <li>
+                <a @onclick="@(() => OpenPost(p.Id))">@p.Title</a>
+                – by @p.Username
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<PostDto>? _posts;
+    private List<UserDto> _users = new();
+    private string? _filterTitle;
+    private CreatePostDto _newPost = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _users = (await UsersService.GetAllAsync()).ToList();
+        await LoadPostsAsync();
+    }
+
+    private async Task LoadPostsAsync()
+    {
+        var data = await PostsService.GetAllAsync(_filterTitle);
+        _posts = data.ToList();
+    }
+
+    private async Task CreatePostAsync()
+    {
+        await PostsService.CreateAsync(_newPost);
+        _newPost = new CreatePostDto();
+        await LoadPostsAsync();
+    }
+
+    private void OpenPost(int id)
+    {
+        Nav.NavigateTo($"/posts/{id}");
+    }
+}

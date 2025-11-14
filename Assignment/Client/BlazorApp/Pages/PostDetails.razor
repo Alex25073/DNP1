@@ -1,0 +1,98 @@
+﻿@page "/posts/{Id:int}"
+@inject IPostsService PostsService
+@inject ICommentsService CommentsService
+@inject IUsersService UsersService
+
+<h3>Post details</h3>
+
+@if (_post is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h4>@_post.Title</h4>
+    <p>@_post.Body</p>
+    <p><strong>Author:</strong> @_post.Username</p>
+
+    <hr />
+    <h4>Comments</h4>
+
+    @if (_comments is null)
+    {
+        <p><em>Loading comments...</em></p>
+    }
+    else if (!_comments.Any())
+    {
+        <p>No comments yet.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var c in _comments)
+            {
+                <li>@c.Body (user id: @c.UserId)</li>
+            }
+        </ul>
+    }
+
+    <AuthorizeView>
+        <Authorized>
+            <h5>Add comment</h5>
+            <EditForm Model="_newComment" OnValidSubmit="CreateCommentAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-2">
+                    <label>Comment:</label><br />
+                    <InputTextArea @bind-Value="_newComment.Body" />
+                </div>
+
+                <div class="mb-2">
+                    <label>User:</label><br />
+                    <select @bind="_newComment.UserId">
+                        <option value="">-- select user --</option>
+                        @foreach (var u in _users)
+                        {
+                            <option value="@u.Id">@u.UserName</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Add comment</button>
+            </EditForm>
+        </Authorized>
+        <NotAuthorized>
+            <p>Log in to add comments.</p>
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private PostDto? _post;
+    private List<CommentDto>? _comments;
+    private List<UserDto> _users = new();
+    private CreateCommentDto _newComment = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _users = (await UsersService.GetAllAsync()).ToList();
+
+        _post = await PostsService.GetByIdAsync(Id);
+
+        var comments = await CommentsService.GetForPostAsync(Id);
+        _comments = comments.ToList();
+
+        _newComment = new CreateCommentDto { PostId = Id };
+    }
+
+    private async Task CreateCommentAsync()
+    {
+        await CommentsService.CreateAsync(_newComment);
+        var comments = await CommentsService.GetForPostAsync(Id);
+        _comments = comments.ToList();
+        _newComment.Body = string.Empty;
+    }
+}

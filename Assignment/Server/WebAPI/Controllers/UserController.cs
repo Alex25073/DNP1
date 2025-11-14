@@ -19,7 +19,7 @@ public class UsersController : ControllerBase
         if (!string.IsNullOrWhiteSpace(contains))
             query = query.Where(u => u.Username.Contains(contains, StringComparison.OrdinalIgnoreCase));
 
-        var result = query.Select(u => new UserDto { Id = u.Id, UserName = u.Username }).ToList();
+        var result = query.Select(u => new UserDto { Id = u.Id, UserName = u.Username, Email = u.Email }).ToList();
         return Ok(result);
     }
 
@@ -29,7 +29,7 @@ public class UsersController : ControllerBase
         try
         {
             var user = await _users.GetSingleAsync(id);
-            return Ok(new UserDto { Id = user.Id, UserName = user.Username });
+            return Ok(new UserDto { Id = user.Id, UserName = user.Username, Email = user.Email });
         }
         catch (Exception ex)
         {
@@ -43,9 +43,9 @@ public class UsersController : ControllerBase
         var existing = _users.GetManyAsync().Any(u => u.Username.Equals(dto.UserName, StringComparison.OrdinalIgnoreCase));
         if (existing) return Conflict("Username already taken");
 
-        var user = new User { Username = dto.UserName, Password = dto.Password };
+        var user = new User { Username = dto.UserName, Password = dto.Password, Email = dto.Email };
         var created = await _users.AddAsync(user);
-        var result = new UserDto { Id = created.Id, UserName = created.Username };
+        var result = new UserDto { Id = created.Id, UserName = created.Username, Email = created.Email };
         return Created($"/Users/{result.Id}", result);
     }
 }
