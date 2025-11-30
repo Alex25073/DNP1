@@ -1,32 +1,38 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using RepositoryContracts;
-using FileRepositories;
-using Microsoft.AspNetCore.OpenApi; // keep this
+using EfcRepositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// your repositories
-builder.Services.AddScoped<IUserRepository, UserFileRepository>(); 
-builder.Services.AddScoped<IPostRepository, PostFileRepository>();  
-builder.Services.AddScoped<ICommentRepository, CommentFileRepository>();  
+// EF Core DbContext
+builder.Services.AddDbContext<AppContext>(options =>
+{
+    options.UseSqlite("Data Source=app.db");
+});
 
-// 👇 NEW: built-in OpenAPI
+// Repositories: use EF instead of FileRepositories
+builder.Services.AddScoped<IUserRepository, UserEfcRepository>();
+builder.Services.AddScoped<IPostRepository, PostEfcRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentEfcRepository>();
+
+// OpenAPI / Swagger (assuming this is what the comment was about)
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // 👇 NEW: maps /openapi/v1.json
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-// optional middlewares (https, etc.) if you want:
 app.UseHttpsRedirection();
-
 app.MapControllers();
 app.Run();

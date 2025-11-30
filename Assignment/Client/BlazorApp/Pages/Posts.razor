@@ -1,13 +1,16 @@
 ﻿@page "/"
 @page "/posts"
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+
 @inject IPostsService PostsService
-@inject IUsersService UsersService
 @inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthProvider
 
 <h3>Posts</h3>
 
 <AuthorizeView>
-    <Authorized>
+    <Authorized Context="auth">
         <h4>Create post</h4>
 
         <EditForm Model="_newPost" OnValidSubmit="CreatePostAsync">
@@ -24,18 +27,12 @@
                 <InputTextArea @bind-Value="_newPost.Body" />
             </div>
 
-            <div class="mb-2">
-                <label>Author (user):</label><br />
-                <select @bind="_newPost.UserId">
-                    <option value="">-- select user --</option>
-                    @foreach (var u in _users)
-                    {
-                        <option value="@u.Id">@u.UserName</option>
-                    }
-                </select>
-            </div>
+            <p>
+                Creating post as:
+                <strong>@auth.User.Identity?.Name</strong>
+            </p>
 
-            <button type="submit" class="btn btn-primary" disabled="_users.Count == 0">
+            <button type="submit" class="btn btn-primary">
                 Create
             </button>
         </EditForm>
@@ -43,7 +40,7 @@
         <hr />
     </Authorized>
     <NotAuthorized>
-        <p>Log in to create posts.</p>
+        <p>You must be logged in to create posts.</p>
         <hr />
     </NotAuthorized>
 </AuthorizeView>
@@ -53,7 +50,9 @@
 <input placeholder="Filter by title..."
        @bind="_filterTitle"
        @bind:event="oninput" />
-<button @onclick="LoadPostsAsync" class="btn btn-secondary btn-sm ms-1">Search</button>
+<button @onclick="LoadPostsAsync" class="btn btn-secondary btn-sm ms-1">
+    Search
+</button>
 
 @if (_posts is null)
 {
@@ -78,13 +77,18 @@ else
 
 @code {
     private List<PostDto>? _posts;
-    private List<UserDto> _users = new();
     private string? _filterTitle;
-    private CreatePostDto _newPost = new();
+
+    // IMPORTANT: set ALL required members here, so CS9035 goes away
+    private CreatePostDto _newPost = new CreatePostDto
+    {
+        Title  = string.Empty,
+        Body   = string.Empty,
+        UserId = 0
+    };
 
     protected override async Task OnInitializedAsync()
     {
-        _users = (await UsersService.GetAllAsync()).ToList();
         await LoadPostsAsync();
     }
 
@@ -96,8 +100,29 @@ else
 
     private async Task CreatePostAsync()
     {
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!(user.Identity?.IsAuthenticated ?? false))
+            return;
+
+        var idClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+        if (idClaim is null) return;
+        if (!int.TryParse(idClaim.Value, out var userId)) return;
+
+        // 👇 Logged-in user id goes here
+        _newPost.UserId = userId;
+
         await PostsService.CreateAsync(_newPost);
-        _newPost = new CreatePostDto();
+
+        // reset with all required members set again
+        _newPost = new CreatePostDto
+        {
+            Title  = string.Empty,
+            Body   = string.Empty,
+            UserId = 0
+        };
+
         await LoadPostsAsync();
     }
 

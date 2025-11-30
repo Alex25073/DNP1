@@ -15,29 +15,28 @@ public class AuthController : ControllerBase
         _users = users;
     }
 
+    // POST /auth/login
     [HttpPost("login")]
-    public ActionResult<UserDto> Login([FromBody] LoginRequest request)
+    public async Task<ActionResult<UserDto>> Login([FromBody] LoginRequest request)
     {
-        var user = _users
-            .GetManyAsync()
-            .FirstOrDefault(u =>
-                u.Username.Equals(request.Username, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+            return BadRequest("Username and password are required.");
 
-        if (user == null)
-        {
-            return Unauthorized("Unknown user.");
-        }
+        var queryable = _users.GetManyAsync();
+        var user = queryable.FirstOrDefault(u =>
+            u.Username.Equals(request.Username, StringComparison.OrdinalIgnoreCase));
 
-        if (!string.Equals(user.Password, request.Password))
-        {
-            return Unauthorized("Incorrect password.");
-        }
+        if (user is null)
+            return Unauthorized("Invalid username or password.");
+
+        if (!string.Equals(user.Password, request.Password, StringComparison.Ordinal))
+            return Unauthorized("Invalid username or password.");
 
         var dto = new UserDto
         {
-            Id = user.Id,
+            Id       = user.Id,
             UserName = user.Username,
-            Email = user.Email
+            Email    = user.Email
         };
 
         return Ok(dto);

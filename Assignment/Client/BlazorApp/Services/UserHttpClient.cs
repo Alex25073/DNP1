@@ -14,7 +14,7 @@ public class UsersHttpClient : IUsersService
 
     public async Task<IEnumerable<UserDto>> GetAllAsync(string? contains = null)
     {
-        var url = "user"; 
+        var url = "users";
         if (!string.IsNullOrWhiteSpace(contains))
         {
             url += $"?contains={Uri.EscapeDataString(contains)}";
@@ -26,7 +26,7 @@ public class UsersHttpClient : IUsersService
 
     public async Task<UserDto> CreateAsync(CreateUserDto dto)
     {
-        var response = await _client.PostAsJsonAsync("user", dto);
+        var response = await _client.PostAsJsonAsync("users", dto);
         response.EnsureSuccessStatusCode();
 
         var created = await response.Content.ReadFromJsonAsync<UserDto>();

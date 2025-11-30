@@ -1,4 +1,6 @@
 ﻿@page "/posts/{Id:int}"
+@using Microsoft.AspNetCore.Components.Authorization
+
 @inject IPostsService PostsService
 @inject ICommentsService CommentsService
 @inject IUsersService UsersService
@@ -37,7 +39,7 @@ else
     }
 
     <AuthorizeView>
-        <Authorized>
+        <Authorized Context="auth">
             <h5>Add comment</h5>
             <EditForm Model="_newComment" OnValidSubmit="CreateCommentAsync">
                 <DataAnnotationsValidator />
@@ -74,7 +76,14 @@ else
     private PostDto? _post;
     private List<CommentDto>? _comments;
     private List<UserDto> _users = new();
-    private CreateCommentDto _newComment = new();
+
+    // Set ALL required members to satisfy CS9035 if your DTO uses `required`
+    private CreateCommentDto _newComment = new CreateCommentDto
+    {
+        Body   = string.Empty,
+        PostId = 0,
+        UserId = 0
+    };
 
     protected override async Task OnParametersSetAsync()
     {
@@ -85,14 +94,26 @@ else
         var comments = await CommentsService.GetForPostAsync(Id);
         _comments = comments.ToList();
 
-        _newComment = new CreateCommentDto { PostId = Id };
+        _newComment = new CreateCommentDto
+        {
+            Body   = string.Empty,
+            PostId = Id,
+            UserId = 0
+        };
     }
 
     private async Task CreateCommentAsync()
     {
         await CommentsService.CreateAsync(_newComment);
+
         var comments = await CommentsService.GetForPostAsync(Id);
         _comments = comments.ToList();
-        _newComment.Body = string.Empty;
+
+        _newComment = new CreateCommentDto
+        {
+            Body   = string.Empty,
+            PostId = Id,
+            UserId = 0
+        };
     }
 }

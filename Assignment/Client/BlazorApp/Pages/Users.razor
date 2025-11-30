@@ -1,0 +1,84 @@
+﻿@page "/users"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@inject IUsersService UsersService
+
+<h3>Users</h3>
+
+<h4>Create user</h4>
+
+<EditForm Model="_newUser" OnValidSubmit="CreateUserAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-2">
+        <label>User name:</label><br />
+        <InputText @bind-Value="_newUser.UserName" />
+    </div>
+
+    <div class="mb-2">
+        <label>Email:</label><br />
+        <InputText @bind-Value="_newUser.Email" />
+    </div>
+
+    <div class="mb-2">
+        <label>Password:</label><br />
+        <InputText @bind-Value="_newUser.Password" type="password" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+<hr />
+
+<h4>All users</h4>
+
+<input placeholder="Filter by name..."
+       @bind="_filter"
+       @bind:event="oninput" />
+<button @onclick="LoadUsersAsync" class="btn btn-secondary btn-sm ms-1">
+    Search
+</button>
+
+@if (_users is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!_users.Any())
+{
+    <p>No users found.</p>
+}
+else
+{
+    <ul>
+        @foreach (var u in _users)
+        {
+            <li>@u.Id – @u.UserName (@u.Email)</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<UserDto>? _users;
+    private string? _filter;
+    private CreateUserDto _newUser = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsersAsync();
+    }
+
+    private async Task LoadUsersAsync()
+    {
+        var data = await UsersService.GetAllAsync(_filter);
+        _users = data.ToList();
+    }
+
+    private async Task CreateUserAsync()
+    {
+        await UsersService.CreateAsync(_newUser);
+        _newUser = new CreateUserDto();
+        await LoadUsersAsync();
+    }
+}
